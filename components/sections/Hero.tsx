@@ -5,9 +5,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { motion, useReducedMotion } from 'framer-motion'
 import { ChevronDown } from 'lucide-react'
-// Cloudinary関連の削除
-// import { getCloudinaryImages, type CloudinaryImage } from '@/lib/cloudinary'
-// import HeroWelcome from './HeroWelcome'
 import { useConfig } from '@/hooks/useConfig'
 
 type TransitionType = 'fade' | 'slideLeft' | 'slideRight' | 'slideUp' | 'slideDown' | 'zoomIn' | 'zoomOut'
@@ -26,15 +23,16 @@ export default function Hero() {
   const [heroAssets, setHeroAssets] = useState<HeroAsset[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [showWelcome, setShowWelcome] = useState(true)
-  const videoRefs = useRef<(HTMLVideoElement | null)[]>([])
+
+  // Refs for both foreground and background videos
+  const fgVideoRefs = useRef<(HTMLVideoElement | null)[]>([])
+  const bgVideoRefs = useRef<(HTMLVideoElement | null)[]>([])
 
   // 設定からアセットを読み込む
   useEffect(() => {
     if (config.hero.assets && config.hero.assets.length > 0) {
-      // Readonly配列を可変配列として扱うためにキャスト
       setHeroAssets(config.hero.assets as unknown as HeroAsset[])
 
-      // 画像の読み込みが完了したら（ここでは即時）、2.5秒後にウェルカム画面をフェードアウト
       const timer = setTimeout(() => {
         setShowWelcome(false)
         setIsLoading(false)
@@ -47,104 +45,88 @@ export default function Hero() {
     }
   }, [config])
 
-  // 動画が終了したら次の動画に切り替え
+  // Unified Timer & Event Logic for Slide Rotation
   useEffect(() => {
-    // heroAssetsが読み込まれていない、またはウェルカム画面表示中は何もしない
     if (heroAssets.length === 0 || showWelcome || isLoading) {
       return
     }
 
-    let cleanupFn: (() => void) | null = null
-
-    // DOM更新を待つために少し遅延
-    const setupTimer = setTimeout(() => {
-      const currentVideo = videoRefs.current[activeIndex]
-
-      if (!currentVideo) {
-        return
-      }
-
-      const handleVideoEnded = () => {
-        setActiveIndex((current) => {
-          const nextIndex = (current + 1) % heroAssets.length
-          return nextIndex
-        })
-      }
-
-      currentVideo.addEventListener('ended', handleVideoEnded)
-
-      // クリーンアップ関数を保存
-      cleanupFn = () => {
-        currentVideo.removeEventListener('ended', handleVideoEnded)
-      }
-    }, 100) // 100ms遅延
-
-    return () => {
-      clearTimeout(setupTimer)
-      if (cleanupFn) {
-        cleanupFn()
-      }
-    }
-  }, [activeIndex, heroAssets, showWelcome, isLoading])
-
-  // 画像の自動切り替え（rotationIntervalを使用）
-  useEffect(() => {
-    // heroAssetsが読み込まれていない、またはウェルカム画面表示中は何もしない
-    if (heroAssets.length === 0 || showWelcome || isLoading) {
-      return
-    }
-
-    // 現在のアセットが画像の場合のみタイマーを設定
     const currentAsset = heroAssets[activeIndex]
-    if (currentAsset?.type === 'image') {
-      const timer = setInterval(() => {
-        setActiveIndex((current) => {
-          const nextIndex = (current + 1) % heroAssets.length
-          return nextIndex
-        })
-      }, config.hero.rotationInterval || 5000)
+    const rotationInterval = config.hero.rotationInterval || 5000
+    let timer: NodeJS.Timeout
 
-      return () => clearInterval(timer)
+    const handleNext = () => {
+      setActiveIndex((current) => (current + 1) % heroAssets.length)
+    }
+
+    if (currentAsset.type === 'video') {
+      const fgVideo = fgVideoRefs.current[activeIndex]
+
+      // 1. Set max duration timer (min(video_length, rotationInterval))
+      // We set the timer for rotationInterval. If video ends earlier, the ended event handles it.
+      // If video is longer, this timer handles it.
+      timer = setTimeout(handleNext, rotationInterval)
+
+      // 2. Handle video ended event (if video is shorter than interval)
+      if (fgVideo) {
+        fgVideo.addEventListener('ended', handleNext)
+      }
+
+      return () => {
+        clearTimeout(timer)
+        if (fgVideo) {
+          fgVideo.removeEventListener('ended', handleNext)
+        }
+      }
+    } else {
+      // Image: just use interval
+      timer = setTimeout(handleNext, rotationInterval)
+      return () => clearTimeout(timer)
     }
   }, [activeIndex, heroAssets, showWelcome, isLoading, config.hero.rotationInterval])
 
-  // 次の動画を事前に読み込む（シームレスな切り替えのため）
+  // Video Playback Synchronization
   useEffect(() => {
-    if (heroAssets.length === 0 || showWelcome || isLoading) {
-      return
-    }
+    // Play active videos, pause others
+    heroAssets.forEach((_, index) => {
+      const fgVideo = fgVideoRefs.current[index]
+      const bgVideo = bgVideoRefs.current[index]
 
-    const nextIndex = (activeIndex + 1) % heroAssets.length
-    const nextVideo = videoRefs.current[nextIndex]
-
-    if (nextVideo && nextVideo.readyState < 4) {
-      // 次の動画をプリロード
-      nextVideo.load()
-    }
-  }, [activeIndex, heroAssets, showWelcome, isLoading])
-
-  // アクティブな動画のみ再生、他は一時停止
-  useEffect(() => {
-    videoRefs.current.forEach((video, index) => {
-      if (video) {
-        if (index === activeIndex) {
-          video.currentTime = 0  // 最初から再生
-          video.play().catch(err => console.log('Video play failed:', err))
-        } else {
-          video.pause()
+      if (index === activeIndex) {
+        // Reset and play active videos
+        if (fgVideo) {
+          fgVideo.currentTime = 0
+          fgVideo.play().catch(() => { })
         }
+        if (bgVideo) {
+          bgVideo.currentTime = 0
+          bgVideo.play().catch(() => { })
+        }
+      } else {
+        // Pause inactive videos
+        if (fgVideo) fgVideo.pause()
+        if (bgVideo) bgVideo.pause()
       }
     })
-  }, [activeIndex])
+  }, [activeIndex, heroAssets])
 
-  // 各トランジションタイプに応じたアニメーション設定を取得
-  const getTransitionVariants = (transition: TransitionType, isActive: boolean) => {
-    const baseInactive = { opacity: 0 }
-    return {
-      initial: { opacity: 0 },
-      animate: isActive ? { opacity: 1 } : { opacity: 0 },
+  // Preload next video
+  useEffect(() => {
+    if (heroAssets.length === 0) return
+    const nextIndex = (activeIndex + 1) % heroAssets.length
+    const nextAsset = heroAssets[nextIndex]
+
+    if (nextAsset.type === 'video') {
+      const fgVideo = fgVideoRefs.current[nextIndex]
+      if (fgVideo && fgVideo.readyState < 4) {
+        fgVideo.load()
+      }
+      const bgVideo = bgVideoRefs.current[nextIndex]
+      if (bgVideo && bgVideo.readyState < 4) {
+        bgVideo.load()
+      }
     }
-  }
+  }, [activeIndex, heroAssets])
 
   return (
     <motion.section
@@ -153,12 +135,12 @@ export default function Hero() {
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
     >
-      {/* 常に表示される暗いオーバーレイ（明るさを一定に保つ） */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/35 to-black/55 z-[1]" />
+      {/* 常に表示される暗いオーバーレイ */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/35 to-black/55 z-[2]" />
 
-      {/* Loading/Welcome Background Overlay (Gradient) */}
+      {/* Loading/Welcome Background Overlay */}
       <motion.div
-        className="absolute inset-0 z-[2] bg-gradient-to-br from-surface via-white to-accent/light/30"
+        className="absolute inset-0 z-[3] bg-gradient-to-br from-surface via-white to-accent/light/30"
         initial={{ opacity: 1 }}
         animate={{ opacity: showWelcome ? 1 : 0 }}
         transition={{ duration: 1.5, ease: "easeInOut" }}
@@ -170,39 +152,74 @@ export default function Hero() {
         </div>
       </motion.div>
 
-      {/* 前景層: 動画/画像 */}
-      <div className="absolute inset-0 z-10">
+      {/* 背景層: ぼかし動画/画像 */}
+      <div className="absolute inset-0 z-0">
         {heroAssets.map((asset, index) => {
-          const variants = getTransitionVariants(asset.transition, activeIndex === index)
+          const isActive = index === activeIndex
           return (
             <motion.div
-              key={`${asset.src}-${index}`}
-              aria-hidden={activeIndex !== index}
+              key={`bg-${asset.src}-${index}`}
+              aria-hidden="true"
               className="absolute inset-0"
-              initial={variants.initial}
-              animate={shouldReducedMotion ? { opacity: index === activeIndex ? 1 : 0 } : variants.animate}
-              transition={{
-                duration: shouldReducedMotion ? 0 : 1.8,
-                ease: [0.43, 0.13, 0.23, 0.96],
+              initial={{ opacity: 0 }}
+              animate={{
+                opacity: isActive ? 1 : 0,
+                zIndex: isActive ? 1 : 0
               }}
+              transition={{ duration: 1.5 }}
             >
               {asset.type === 'video' ? (
                 <video
-                  ref={(el) => {
-                    videoRefs.current[index] = el
-                  }}
-                  autoPlay={index === 0}
+                  ref={(el) => { bgVideoRefs.current[index] = el }}
                   muted
                   playsInline
-                  preload={index === activeIndex || index === (activeIndex + 1) % heroAssets.length ? "auto" : "none"}
-                  style={{ willChange: index === activeIndex ? 'transform, opacity' : 'auto' }}
+                  loop
+                  className="w-full h-full object-cover filter blur-xl scale-110 brightness-90"
+                >
+                  <source src={asset.src} type="video/mp4" />
+                  <source src={asset.src.replace('-1080p.mp4', '-720p.mp4')} type="video/mp4" />
+                </video>
+              ) : (
+                <Image
+                  src={asset.src}
+                  alt=""
+                  fill
+                  priority={index === 0}
+                  className="object-cover filter blur-xl scale-110 brightness-90"
+                  sizes="100vw"
+                />
+              )}
+            </motion.div>
+          )
+        })}
+      </div>
+
+      {/* 前景層: 動画/画像 */}
+      <div className="absolute inset-0 z-10">
+        {heroAssets.map((asset, index) => {
+          const isActive = index === activeIndex
+          return (
+            <motion.div
+              key={`${asset.src}-${index}`}
+              aria-hidden={!isActive}
+              className="absolute inset-0"
+              initial={{ opacity: 0 }}
+              animate={{
+                opacity: isActive ? 1 : 0,
+                zIndex: isActive ? 10 : 0
+              }}
+              transition={{ duration: 1.5 }}
+            >
+              {asset.type === 'video' ? (
+                <video
+                  ref={(el) => { fgVideoRefs.current[index] = el }}
+                  muted
+                  playsInline
+                  preload="metadata"
                   className="w-full h-full object-contain"
                 >
                   <source src={asset.src} type="video/mp4" />
-                  <source
-                    src={asset.src.replace('-1080p.mp4', '-720p.mp4')}
-                    type="video/mp4"
-                  />
+                  <source src={asset.src.replace('-1080p.mp4', '-720p.mp4')} type="video/mp4" />
                 </video>
               ) : (
                 <Image

@@ -88,20 +88,20 @@ export const weddingConfig = {
     // ============================================
     hero: {
         // 画像切り替え間隔(ミリ秒)
-        rotationInterval: 5000,
+        rotationInterval: 7000,
 
         // 表示するアセット(画像または動画)
         assets: [
             {
                 type: 'image',
-                src: '/images/optimized/sample-hero-1.webp',
+                src: '/images/optimized/sample-story-2.webp',
                 alt: 'サンプル画像1',
                 transition: 'fade',
             },
             {
-                type: 'image',
-                src: '/images/optimized/sample-hero-2.webp',
-                alt: 'サンプル画像2',
+                type: 'video',
+                src: '/videos/optimized/sample-hero-2-1080p.mp4',
+                alt: 'サンプル動画2',
                 transition: 'fade',
             },
         ] as const,
@@ -114,21 +114,24 @@ export const weddingConfig = {
     },
     story: [
         {
-            image: '/images/optimized/sample-story-1.webp',
+            type: 'image',
+            src: '/images/optimized/sample-story-1.webp',
             title: '出会い',
             description: '202X年X月、友人の紹介で出会いました。\n共通の趣味で意気投合し、\nすぐに惹かれ合いました。',
         },
         {
-            image: '/images/optimized/sample-story-2.webp',
+            type: 'video',
+            src: '/videos/optimized/sample-hero-1-1080p.mp4',
             title: '初デート',
             description: '初めてのデートは思い出の場所へ。\n緊張しながらも、楽しい時間を過ごしました。',
         },
         {
-            image: '/images/optimized/sample-story-3.webp',
+            type: 'image',
+            src: '/images/optimized/sample-story-3.webp',
             title: 'プロポーズ',
             description: '記念日の夜、思い出の場所で。\n「これからもずっと一緒にいてください」\nという言葉とともに、新しい人生が始まりました。',
         },
-    ],
+    ] as const,
     // ============================================
     // ❓ カップルクイズ
     // ============================================

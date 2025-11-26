@@ -5,14 +5,15 @@ import Image from 'next/image'
 import { motion } from 'framer-motion'
 
 interface StoryItem {
-  image: string
+  type: 'image' | 'video'
+  src: string
   title: string
   description: string
 }
 
 export default function StoryClient() {
   const config = useConfig()
-  const stories = config.story || []
+  const stories = (config.story || []) as unknown as StoryItem[]
 
   // ストーリーがない場合は非表示
   if (stories.length === 0) {
@@ -52,13 +53,25 @@ export default function StoryClient() {
 
               <div className="w-full md:w-1/2">
                 <div className="relative w-full aspect-[4/3] rounded-[22px] overflow-hidden shadow-floating border border-white/50 bg-surface group">
-                  <Image
-                    src={item.image}
-                    alt={item.title}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                  />
+                  {item.type === 'video' ? (
+                    <video
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    >
+                      <source src={item.src} type="video/mp4" />
+                    </video>
+                  ) : (
+                    <Image
+                      src={item.src}
+                      alt={item.title}
+                      fill
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                    />
+                  )}
                   <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-500" />
                 </div>
               </div>
