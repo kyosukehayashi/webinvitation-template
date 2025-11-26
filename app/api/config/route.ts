@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { weddingConfig as defaultConfig } from '@/config/wedding.config'
+import { weddingConfig as defaultConfig } from '@/config'
 
 /**
  * GET /api/config

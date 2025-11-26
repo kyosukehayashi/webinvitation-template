@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { weddingConfig } from '@/config/wedding.config'
+import { googleFormsConfig } from '@/config'
 
 export async function POST(request: NextRequest) {
     try {
@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
         // Google Formに送信
         try {
             const formData = new URLSearchParams()
-            const { url, entryIds } = weddingConfig.googleForms.musicRequest
+            const { url, entryIds } = googleFormsConfig.musicRequest
 
             // wedding.config.tsから取得したentry番号を使用
             formData.append(entryIds.title, body.title)

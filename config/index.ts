@@ -22,6 +22,33 @@ export { weddingConfig }
 export type { WeddingConfig } from './wedding.config.default'
 
 /**
+ * Google Forms設定を環境変数から取得
+ * セキュリティのため、フォームURLとentry IDsは環境変数で管理します
+ */
+export const googleFormsConfig = {
+  rsvp: {
+    url: process.env.NEXT_PUBLIC_GOOGLE_FORM_RSVP_URL || '',
+    entryIds: {
+      name: process.env.NEXT_PUBLIC_GOOGLE_FORM_RSVP_ENTRY_NAME || '',
+      email: process.env.NEXT_PUBLIC_GOOGLE_FORM_RSVP_ENTRY_EMAIL || '',
+      attendance: process.env.NEXT_PUBLIC_GOOGLE_FORM_RSVP_ENTRY_ATTENDANCE || '',
+      guests: process.env.NEXT_PUBLIC_GOOGLE_FORM_RSVP_ENTRY_GUESTS || '',
+      allergies: process.env.NEXT_PUBLIC_GOOGLE_FORM_RSVP_ENTRY_ALLERGIES || '',
+      message: process.env.NEXT_PUBLIC_GOOGLE_FORM_RSVP_ENTRY_MESSAGE || '',
+    },
+  },
+  musicRequest: {
+    url: process.env.NEXT_PUBLIC_GOOGLE_FORM_MUSIC_URL || '',
+    entryIds: {
+      title: process.env.NEXT_PUBLIC_GOOGLE_FORM_MUSIC_ENTRY_TITLE || '',
+      artist: process.env.NEXT_PUBLIC_GOOGLE_FORM_MUSIC_ENTRY_ARTIST || '',
+      requester: process.env.NEXT_PUBLIC_GOOGLE_FORM_MUSIC_ENTRY_REQUESTER || '',
+      message: process.env.NEXT_PUBLIC_GOOGLE_FORM_MUSIC_ENTRY_MESSAGE || '',
+    },
+  },
+}
+
+/**
  * 結婚式設定を取得
  * 常に wedding.config.ts の内容を返します
  */

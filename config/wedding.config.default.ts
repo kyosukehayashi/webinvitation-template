@@ -188,33 +188,7 @@ export const weddingConfig = {
         keywords: '結婚式,ウェディング,山田太郎,鈴木花子,Sample Hotel Tokyo',
     },
 
-    // ============================================
-    // 📝 Google Forms連携設定
-    // ============================================
-    googleForms: {
-        // 出席確認フォーム
-        rsvp: {
-            url: 'https://docs.google.com/forms/d/e/YOUR_FORM_ID/formResponse',
-            entryIds: {
-                name: 'entry.123456789',
-                email: 'entry.123456789',
-                attendance: 'entry.123456789',
-                guests: 'entry.123456789',
-                allergies: 'entry.123456789',
-                message: 'entry.123456789',
-            },
-        },
-        // 楽曲リクエストフォーム
-        musicRequest: {
-            url: 'https://docs.google.com/forms/d/e/YOUR_FORM_ID/formResponse',
-            entryIds: {
-                title: 'entry.123456789',
-                artist: 'entry.123456789',
-                requester: 'entry.123456789',
-                message: 'entry.123456789',
-            },
-        },
-    },
+
 }
 
 export type WeddingConfig = typeof weddingConfig

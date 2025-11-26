@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { weddingConfig } from '@/config/wedding.config'
+import { googleFormsConfig } from '@/config'
 
 export async function POST(request: NextRequest) {
   console.log('=== RSVP API called ===')
@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
     // Google Formに送信（Apps Scriptが自動でメール送信）
     try {
       const formData = new URLSearchParams()
-      const { url, entryIds } = weddingConfig.googleForms.rsvp
+      const { url, entryIds } = googleFormsConfig.rsvp
 
       console.log('Google Form URL:', url)
       console.log('Entry IDs:', entryIds)
