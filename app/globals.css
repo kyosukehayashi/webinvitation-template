@@ -1,0 +1,93 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-sans: 'Noto Sans JP', sans-serif;
+  --font-serif: 'Noto Serif JP', serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply antialiased bg-base text-text-primary;
+    background-image: radial-gradient(circle at top, rgba(255,255,255,0.45), transparent 45%),
+      radial-gradient(circle at 20% 20%, rgba(183,109,104,0.08), transparent 35%),
+      linear-gradient(180deg, #fffdf8 0%, #f8f4ef 40%, #f5f0e8 100%);
+    min-height: 100vh;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-serif text-text-primary tracking-wide;
+  }
+
+  p {
+    @apply text-body text-text-secondary;
+  }
+}
+
+@layer components {
+  .section-shell {
+    @apply py-16 md:py-24;
+  }
+
+  .section-shell--light {
+    @apply bg-surface/80;
+  }
+
+  .eyebrow {
+    @apply uppercase tracking-[0.35em] text-xs text-accent flex items-center justify-center gap-3;
+  }
+
+  .eyebrow::before,
+  .eyebrow::after {
+    content: '';
+    @apply block h-px w-8 bg-accent/40;
+  }
+
+  .card-panel {
+    @apply rounded-[28px] bg-white/95 shadow-floating border border-white/60 backdrop-blur;
+  }
+
+  .btn-pill {
+    @apply inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-medium transition-all duration-300;
+  }
+
+  .btn-primary {
+    @apply btn-pill bg-accent text-white shadow-md hover:bg-accent-hover;
+  }
+
+  .btn-ghost {
+    @apply btn-pill border border-accent/30 text-accent hover:bg-accent/5;
+  }
+
+  .pill {
+    @apply inline-flex items-center gap-2 rounded-full bg-accent/10 px-4 py-2 text-xs text-accent;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .animation-delay-200 {
+    animation-delay: 200ms;
+  }
+
+  .animation-delay-400 {
+    animation-delay: 400ms;
+  }
+
+  .animation-delay-600 {
+    animation-delay: 600ms;
+  }
+
+  .grid-auto-fit {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+}
+
