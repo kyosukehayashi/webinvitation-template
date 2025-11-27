@@ -19,12 +19,12 @@ export default function Details() {
         >
           <div className="eyebrow justify-center mb-4 text-accent">
             <Heart className="w-4 h-4" />
-            Details
+            {config.sections?.details?.eyebrow || 'Details'}
           </div>
           <h2 className="font-serif text-section-title text-text-primary mb-3">
-            Details
+            {config.sections?.details?.title || 'Details'}
           </h2>
-          <p className="text-text-secondary">式詳細</p>
+          <p className="text-text-secondary">{config.sections?.details?.subtitle || '式詳細'}</p>
         </motion.div>
 
         <div className="max-w-4xl mx-auto">
@@ -44,7 +44,7 @@ export default function Details() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.2 }}
               >
-                <p className="text-sm text-accent mb-3 tracking-[0.4em] uppercase">Wedding Celebration</p>
+                <p className="text-sm text-accent mb-3 tracking-[0.4em] uppercase">{config.sections?.details?.weddingCelebration || 'Wedding Celebration'}</p>
                 <h3 className="font-serif text-3xl sm:text-4xl text-text-primary mb-2">
                   {config.couple.displayNames}
                 </h3>
@@ -69,7 +69,7 @@ export default function Details() {
                     <Calendar className="w-6 h-6 text-accent" />
                   </div>
                   <div className="flex-1">
-                    <h4 className="text-sm font-semibold text-text-secondary mb-2 tracking-wide uppercase">Date</h4>
+                    <h4 className="text-sm font-semibold text-text-secondary mb-2 tracking-wide uppercase">{config.sections?.details?.labels?.date || 'Date'}</h4>
                     <p className="text-xl sm:text-2xl font-serif text-text-primary">
                       {config.event.date}
                     </p>
@@ -91,7 +91,7 @@ export default function Details() {
                     <Clock className="w-6 h-6 text-accent" />
                   </div>
                   <div className="flex-1">
-                    <h4 className="text-sm font-semibold text-text-secondary mb-3 tracking-wide uppercase">Schedule</h4>
+                    <h4 className="text-sm font-semibold text-text-secondary mb-3 tracking-wide uppercase">{config.sections?.details?.labels?.schedule || 'Schedule'}</h4>
                     <div className="space-y-3">
                       <div className="flex items-baseline gap-3">
                         <span className="text-sm font-medium text-accent min-w-[60px]">
@@ -130,7 +130,7 @@ export default function Details() {
                     <MapPin className="w-6 h-6 text-accent" />
                   </div>
                   <div className="flex-1">
-                    <h4 className="text-sm font-semibold text-text-secondary mb-2 tracking-wide uppercase">Venue</h4>
+                    <h4 className="text-sm font-semibold text-text-secondary mb-2 tracking-wide uppercase">{config.sections?.details?.labels?.venue || 'Venue'}</h4>
                     <p className="text-xl sm:text-2xl font-serif text-text-primary mb-1">
                       {config.event.venue.name}
                     </p>
@@ -150,7 +150,7 @@ export default function Details() {
               className="bg-surface px-8 py-6 border-t border-line"
             >
               <div className="flex flex-col sm:flex-row items-center justify-center gap-2 text-center">
-                <p className="text-sm text-text-muted">ご不明な点がございましたら</p>
+                <p className="text-sm text-text-muted">{config.sections?.details?.contactMessage || 'ご不明な点がございましたら'}</p>
                 <a
                   href={`mailto:${config.contact.email}`}
                   className="inline-flex items-center gap-2 text-accent hover:text-accent-hover transition-colors font-medium"
@@ -173,9 +173,9 @@ export default function Details() {
             <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full border border-line bg-white/70 shadow-sm">
               <Heart className="w-4 h-4 text-accent" />
               <p className="text-sm text-text-secondary">
-                <span className="font-medium text-text-primary">ご出欠のご連絡</span>は
+                <span className="font-medium text-text-primary">{config.sections?.details?.rsvpMessage?.prefix || 'ご出欠のご連絡は'}</span>は
                 <span className="font-semibold text-accent mx-1">{config.event.rsvpDeadline}</span>
-                までにお願いいたします
+                {config.sections?.details?.rsvpMessage?.suffix || 'までにお願いいたします'}
               </p>
             </div>
           </motion.div>

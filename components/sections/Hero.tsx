@@ -282,9 +282,9 @@ export default function Hero() {
           className="space-y-6 sm:space-y-8"
         >
           <p className={`eyebrow justify-center ${showWelcome ? 'text-ink-muted' : 'text-white/70'}`}>
-            Wedding Invitation
+            {config.sections?.hero?.eyebrow || 'Wedding Invitation'}
           </p>
-          <h1 className={`font-serif text-display font-light tracking-[0.2em] transition-colors duration-1000 ${showWelcome ? 'text-ink-primary' : 'text-white'}`}>
+          <h1 className={`font-serif text-display font-light tracking-wide sm:tracking-[0.2em] transition-colors duration-1000 whitespace-nowrap ${showWelcome ? 'text-ink-primary' : 'text-white'}`}>
             {config.couple.displayNames}
           </h1>
 
@@ -303,7 +303,7 @@ export default function Hero() {
             className="pt-8"
           >
             <Link href="#rsvp" className="btn-primary">
-              ご出欠のご連絡
+              {config.sections?.hero?.rsvpButton || 'ご出欠のご連絡'}
             </Link>
           </motion.div>
         </motion.div>

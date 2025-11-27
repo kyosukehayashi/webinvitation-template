@@ -17,12 +17,12 @@ export default function Venue() {
           transition={{ duration: 0.8 }}
           className="text-center mb-12"
         >
-          <p className="eyebrow justify-center mb-3 text-accent">Venue</p>
+          <p className="eyebrow justify-center mb-3 text-accent">{config.sections?.venue?.eyebrow || 'Venue'}</p>
           <h2 className="font-serif text-3xl sm:text-4xl text-text-primary">
-            会場のご案内
+            {config.sections?.venue?.title || '会場のご案内'}
           </h2>
           <p className="mt-3 text-sm text-text-secondary">
-            迷わずお越しいただけるよう、所在地とアクセス情報をまとめました。
+            {config.sections?.venue?.description || '迷わずお越しいただけるよう、所在地とアクセス情報をまとめました。'}
           </p>
         </motion.div>
 
@@ -71,7 +71,7 @@ export default function Venue() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 rounded-full border border-accent/40 px-5 py-2 text-sm font-medium text-accent transition-colors hover:bg-accent hover:text-white"
               >
-                Google Maps で開く
+                {config.sections?.venue?.googleMapsButton || 'Google Maps で開く'}
                 <ExternalLink className="h-4 w-4" />
               </a>
             </div>

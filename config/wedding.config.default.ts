@@ -144,22 +144,71 @@ export const weddingConfig = {
             description: '記念日の夜、思い出の場所で。\n「これからもずっと一緒にいてください」\nという言葉とともに、新しい人生が始まりました。',
         },
     ] as const,
+
     // ============================================
     // ❓ カップルクイズ
     // ============================================
     coupleQuiz: {
-        title: 'Couple Quiz',
-        subtitle: 'お二人についてのクイズ',
-        description: '正解は当日のお楽しみです!直感でお答えください。',
-        question: '新郎新婦が初めて出会った場所はどこでしょう?',
-        options: [
-            { label: '大学のサークル', value: 'circle' },
-            { label: '友人の紹介で参加した食事会', value: 'dinner' },
-            { label: '同じ会社のプロジェクト', value: 'work' },
-            { label: '趣味のイベント', value: 'hobby' },
+        questions: [
+            {
+                id: 'meeting-place',
+                question: '私たちが初めて出会った場所はどこでしょう？',
+                hint: '共通の趣味を通じて出会いました。',
+                explanation: '正解は「山岳サークルの早朝トレッキング」。自然好きがきっかけで距離が縮まりました。',
+                options: [
+                    {
+                        label: '大学のゼミ',
+                        value: 'seminar',
+                        description: '同じ学部だったことはありますが、出会いは別のきっかけです。',
+                    },
+                    {
+                        label: '友人主催のBBQ',
+                        value: 'bbq',
+                        description: '友人が多く集まるイベントではよく顔を合わせていました。',
+                    },
+                    {
+                        label: '山岳サークルのトレッキング',
+                        value: 'trekking',
+                        isCorrect: true,
+                        description: '早朝の集合でお互い眠そうにしていたのが印象的だったとか。',
+                    },
+                    {
+                        label: '会社の新卒研修',
+                        value: 'orientation',
+                        description: '同期ではありますが、出会いは入社前でした。',
+                    },
+                ],
+            },
+            {
+                id: 'first-date',
+                question: '初めてのデートで訪れた場所は？',
+                hint: '映画の後に海沿いを散歩しました。',
+                explanation: '正解は「みなとみらいの映画館」。上映後に観覧車に乗って夜景を眺めました。',
+                options: [
+                    {
+                        label: '渋谷のカフェ巡り',
+                        value: 'shibuya',
+                        description: 'コーヒー好きな2人ですが、初デートは少し遠出でした。',
+                    },
+                    {
+                        label: 'みなとみらいの映画館',
+                        value: 'minatomirai',
+                        isCorrect: true,
+                        description: '記念すべき初デートはロマンチックな夜景と共に。',
+                    },
+                    {
+                        label: '鎌倉の寺社巡り',
+                        value: 'kamakura',
+                        description: 'のちに訪れたお気に入りスポットですが、初回ではありません。',
+                    },
+                    {
+                        label: '自宅でオンラインゲーム',
+                        value: 'online',
+                        description: 'ゲームも好きですが、初デートは対面で。',
+                    },
+                ],
+            },
         ],
-        // 正解(当日まで秘密!)
-        correctAnswer: 'dinner',
     },
 
     // ============================================
@@ -203,6 +252,100 @@ export const weddingConfig = {
         keywords: '結婚式,ウェディング,山田太郎,鈴木花子,Sample Hotel Tokyo',
     },
 
+
+    // ============================================
+    // 📝 セクション設定（テキスト・ラベル等）
+    // ============================================
+    sections: {
+        hero: {
+            eyebrow: 'Wedding Invitation',
+            rsvpButton: 'ご出欠のご連絡',
+        },
+        intro: {
+            eyebrow: 'Invitation',
+            // messages are already in config.messages.intro
+        },
+        details: {
+            eyebrow: 'Details',
+            title: 'Details',
+            subtitle: '式詳細',
+            weddingCelebration: 'Wedding Celebration',
+            labels: {
+                date: 'Date',
+                schedule: 'Schedule',
+                venue: 'Venue',
+            },
+            contactMessage: 'ご不明な点がございましたら',
+            rsvpMessage: {
+                prefix: 'ご出欠のご連絡は',
+                suffix: 'までにお願いいたします',
+            },
+        },
+        story: {
+            eyebrow: 'Storyline',
+            title: 'Our Story',
+            subtitle: '私たちの物語',
+            storyLabel: 'STORY',
+        },
+        venue: {
+            eyebrow: 'Venue',
+            title: '会場のご案内',
+            description: '迷わずお越しいただけるよう、所在地とアクセス情報をまとめました。',
+            googleMapsButton: 'Google Maps で開く',
+        },
+        rsvp: {
+            eyebrow: 'RSVP',
+            title: 'ご出欠のご連絡',
+            description: 'お手数ですが、ご出欠のご意向やアレルギーなどございましたら下記フォームにてお知らせください。',
+            deadlineLabel: '回答期限：',
+            form: {
+                name: { label: 'お名前', placeholder: '山田 太郎' },
+                email: { label: 'メールアドレス', placeholder: 'example@email.com' },
+                attendance: { label: 'ご出欠', options: { attending: '出席', absent: '欠席' } },
+                guests: { label: 'ご同伴者数（任意）', placeholder: '例：1名' },
+                allergies: { label: 'アレルギーの有無（任意）', placeholder: '例：えび、かに' },
+                message: { label: 'メッセージ（任意）', placeholder: 'お二人へのメッセージをお願いします' },
+                submitButton: { default: '送信する', sending: '送信中...' },
+            },
+            success: {
+                pill: 'RSVP Received',
+                title: 'ご回答ありがとうございます',
+                message: 'ご出欠のご連絡を承りました。\n当日、皆様にお会いできることを楽しみにしております。',
+                button: '別の回答を送信する',
+            },
+        },
+        musicRequests: {
+            pill: 'プレイリストにあなたの1曲を',
+            searchPlaceholder: 'アーティスト名や曲名で検索',
+            searchButton: { default: '楽曲を検索', searching: '検索中...' },
+            searchResultsTitle: '検索結果',
+            requestButton: 'リクエスト',
+            previewButton: '試聴',
+            form: {
+                title: '楽曲リクエスト',
+                name: { label: 'お名前（任意）', placeholder: '例：ゲスト 太郎（空欄の場合は「匿名ゲスト」として表示されます）' },
+                message: { label: 'メッセージ（任意）', placeholder: 'この曲にまつわる思い出や聴きどころをぜひ教えてください' },
+                cancelButton: 'キャンセル',
+                submitButton: { default: 'リクエストを送信', sending: '登録中...' },
+            },
+            success: {
+                message: 'リクエストありがとうございます！\n当日のプレイリストに反映させていただきます。\nどんな曲が流れるかは、当日のお楽しみです♪',
+            },
+        },
+        coupleQuiz: {
+            pill: 'Couple Discovery Quiz',
+            title: 'お二人をもっと知ろう',
+            description: 'クイズに答えて、おふたりの意外な一面に触れてみましょう。披露宴当日のトリビアトークのヒントにもなります。',
+            questionCount: '問目',
+            hintLabel: 'ヒント：',
+            explanationLabel: '解説',
+            correctCountLabel: '現在の正解数：',
+            buttons: {
+                reset: '最初からやり直す',
+                next: '次のクイズへ',
+            },
+        },
+    },
 
 }
 

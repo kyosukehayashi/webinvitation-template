@@ -13,6 +13,7 @@ import {
   X,
   ExternalLink,
 } from 'lucide-react'
+import { useConfig } from '@/hooks/useConfig'
 
 interface TrackResult {
   id: string
@@ -24,6 +25,7 @@ interface TrackResult {
 }
 
 export default function MusicRequests() {
+  const config = useConfig()
   const [query, setQuery] = useState('')
   const [isSearching, setIsSearching] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -147,14 +149,13 @@ export default function MusicRequests() {
         >
           <div className="pill mx-auto mb-4 justify-center">
             <Sparkles className="h-4 w-4" />
-            プレイリストにあなたの1曲を
+            {config.sections?.musicRequests?.pill || 'プレイリストにあなたの1曲を'}
           </div>
           <h2 className="font-serif text-section-title text-text-primary mb-4">
-            Music Request Lounge
+            {config.musicRequests?.title || 'Music Request Lounge'}
           </h2>
           <p className="text-text-secondary leading-relaxed text-sm sm:text-base">
-            YouTube Musicと連携したリクエストコーナーです。おふたりとゲストの皆さまで、
-            当日のサウンドトラックを一緒に作り上げましょう。
+            {config.musicRequests?.description || 'YouTube Musicと連携したリクエストコーナーです。おふたりとゲストの皆さまで、当日のサウンドトラックを一緒に作り上げましょう。'}
           </p>
         </motion.div>
 
@@ -177,7 +178,7 @@ export default function MusicRequests() {
                   type="text"
                   value={query}
                   onChange={(event) => setQuery(event.target.value)}
-                  placeholder="アーティスト名や曲名で検索"
+                  placeholder={config.sections?.musicRequests?.searchPlaceholder || 'アーティスト名や曲名で検索'}
                   className="w-full rounded-lg border border-gray-200 bg-gray-50 py-3 pl-11 pr-4 text-sm focus:border-accent focus:bg-white focus:outline-none focus:ring-2 focus:ring-accent/10"
                 />
               </div>
@@ -189,12 +190,12 @@ export default function MusicRequests() {
                 {isSearching ? (
                   <>
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    検索中...
+                    {config.sections?.musicRequests?.searchButton?.searching || '検索中...'}
                   </>
                 ) : (
                   <>
                     <Music2 className="h-4 w-4" />
-                    楽曲を検索
+                    {config.sections?.musicRequests?.searchButton?.default || '楽曲を検索'}
                   </>
                 )}
               </button>
@@ -215,7 +216,7 @@ export default function MusicRequests() {
               >
                 <h3 className="text-lg font-semibold text-text-primary mb-4 flex items-center gap-2">
                   <Music2 className="w-5 h-5 text-accent" />
-                  検索結果
+                  {config.sections?.musicRequests?.searchResultsTitle || '検索結果'}
                 </h3>
                 <div className="grid gap-4 sm:grid-cols-2">
                   {results.map((track) => (
@@ -255,7 +256,7 @@ export default function MusicRequests() {
                               rel="noopener noreferrer"
                               className="inline-flex items-center gap-1 text-xs text-accent hover:text-accent-hover"
                             >
-                              試聴
+                              {config.sections?.musicRequests?.previewButton || '試聴'}
                               <ExternalLink className="h-3 w-3" />
                             </a>
                           )}
@@ -265,7 +266,7 @@ export default function MusicRequests() {
                             className="btn-primary px-4 py-2"
                           >
                             <Plus className="h-4 w-4" />
-                            リクエスト
+                            {config.sections?.musicRequests?.requestButton || 'リクエスト'}
                           </button>
                         </div>
                       </div>
@@ -289,7 +290,7 @@ export default function MusicRequests() {
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-semibold text-text-primary flex items-center gap-2">
                     <Music2 className="w-5 h-5 text-accent" />
-                    楽曲リクエスト
+                    {config.sections?.musicRequests?.form?.title || '楽曲リクエスト'}
                   </h3>
                   <button
                     onClick={handleCancel}
@@ -326,26 +327,26 @@ export default function MusicRequests() {
                 <form onSubmit={handleSubmitRequest} className="space-y-4">
                   <div>
                     <label className="mb-2 block text-sm font-medium text-text-secondary">
-                      お名前（任意）
+                      {config.sections?.musicRequests?.form?.name?.label || 'お名前（任意）'}
                     </label>
                     <input
                       type="text"
                       value={requester}
                       onChange={(event) => setRequester(event.target.value)}
                       className="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/10"
-                      placeholder="例：ゲスト 太郎（空欄の場合は「匿名ゲスト」として表示されます）"
+                      placeholder={config.sections?.musicRequests?.form?.name?.placeholder || '例：ゲスト 太郎（空欄の場合は「匿名ゲスト」として表示されます）'}
                     />
                   </div>
                   <div>
                     <label className="mb-2 block text-sm font-medium text-text-secondary">
-                      メッセージ（任意）
+                      {config.sections?.musicRequests?.form?.message?.label || 'メッセージ（任意）'}
                     </label>
                     <textarea
                       value={message}
                       onChange={(event) => setMessage(event.target.value)}
                       rows={3}
                       className="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/10 resize-none"
-                      placeholder="この曲にまつわる思い出や聴きどころをぜひ教えてください"
+                      placeholder={config.sections?.musicRequests?.form?.message?.placeholder || 'この曲にまつわる思い出や聴きどころをぜひ教えてください'}
                     />
                   </div>
                   <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
@@ -355,7 +356,7 @@ export default function MusicRequests() {
                       className="btn-ghost"
                     >
                       <X className="h-4 w-4" />
-                      キャンセル
+                      {config.sections?.musicRequests?.form?.cancelButton || 'キャンセル'}
                     </button>
                     <button
                       type="submit"
@@ -365,12 +366,12 @@ export default function MusicRequests() {
                       {isSubmitting ? (
                         <>
                           <Loader2 className="h-4 w-4 animate-spin" />
-                          登録中...
+                          {config.sections?.musicRequests?.form?.submitButton?.sending || '登録中...'}
                         </>
                       ) : (
                         <>
                           <Send className="h-4 w-4" />
-                          リクエストを送信
+                          {config.sections?.musicRequests?.form?.submitButton?.default || 'リクエストを送信'}
                         </>
                       )}
                     </button>
@@ -389,10 +390,8 @@ export default function MusicRequests() {
                 exit={{ opacity: 0, y: -10 }}
                 className="mb-8 rounded-2xl bg-emerald-50 border border-emerald-200 p-4 text-center"
               >
-                <p className="text-sm font-medium text-green-800">
-                  リクエストありがとうございます！<br />
-                  当日のプレイリストに反映させていただきます。<br />
-                  どんな曲が流れるかは、当日のお楽しみです♪
+                <p className="text-sm font-medium text-green-800 whitespace-pre-line">
+                  {config.sections?.musicRequests?.success?.message || 'リクエストありがとうございます！\n当日のプレイリストに反映させていただきます。\nどんな曲が流れるかは、当日のお楽しみです♪'}
                 </p>
               </motion.div>
             )}

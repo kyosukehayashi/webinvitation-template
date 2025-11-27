@@ -30,11 +30,11 @@ export default function StoryClient() {
           transition={{ duration: 0.8 }}
           className="text-center mb-14"
         >
-          <p className="eyebrow justify-center mb-4 text-accent">Storyline</p>
+          <p className="eyebrow justify-center mb-4 text-accent">{config.sections?.story?.eyebrow || 'Storyline'}</p>
           <h2 className="font-serif text-section-title text-text-primary">
-            Our Story
+            {config.sections?.story?.title || 'Our Story'}
           </h2>
-          <p className="text-text-secondary text-sm mt-2">私たちの物語</p>
+          <p className="text-text-secondary text-sm mt-2">{config.sections?.story?.subtitle || '私たちの物語'}</p>
         </motion.div>
 
         <div className="relative max-w-5xl mx-auto space-y-12 sm:space-y-16">
@@ -78,7 +78,7 @@ export default function StoryClient() {
 
               <div className={`w-full md:w-1/2 space-y-4 ${index % 2 === 0 ? 'md:text-left' : 'md:text-right'} text-center`}>
                 <div className="pill mx-auto md:mx-0 justify-center md:justify-start uppercase tracking-[0.4em]">
-                  STORY {index + 1}
+                  {config.sections?.story?.storyLabel || 'STORY'} {index + 1}
                 </div>
                 <h3 className="font-serif text-2xl sm:text-3xl text-text-primary">
                   {item.title}

@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Send, CheckCircle2 } from 'lucide-react'
+import { useConfig } from '@/hooks/useConfig'
 
 interface FormData {
   name: string
@@ -29,6 +30,7 @@ export default function RSVP() {
     message: '',
   })
 
+  const config = useConfig()
   const [errors, setErrors] = useState<FormErrors>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
@@ -115,20 +117,19 @@ export default function RSVP() {
           >
             <div className="pill mx-auto w-fit">
               <CheckCircle2 className="h-4 w-4" />
-              RSVP Received
+              {config.sections?.rsvp?.success?.pill || 'RSVP Received'}
             </div>
             <h3 className="font-serif text-3xl text-text-primary">
-              ご回答ありがとうございます
+              {config.sections?.rsvp?.success?.title || 'ご回答ありがとうございます'}
             </h3>
-            <p className="text-text-secondary leading-relaxed">
-              ご出欠のご連絡を承りました。<br />
-              当日、皆様にお会いできることを楽しみにしております。
+            <p className="text-text-secondary leading-relaxed whitespace-pre-line">
+              {config.sections?.rsvp?.success?.message || 'ご出欠のご連絡を承りました。\n当日、皆様にお会いできることを楽しみにしております。'}
             </p>
             <button
               onClick={() => setIsSuccess(false)}
               className="btn-ghost mx-auto"
             >
-              別の回答を送信する
+              {config.sections?.rsvp?.success?.button || '別の回答を送信する'}
             </button>
           </motion.div>
         </div>
@@ -146,15 +147,15 @@ export default function RSVP() {
           transition={{ duration: 0.8 }}
           className="mb-12 text-center"
         >
-          <p className="eyebrow justify-center text-accent">RSVP</p>
+          <p className="eyebrow justify-center text-accent">{config.sections?.rsvp?.eyebrow || 'RSVP'}</p>
           <h2 className="mt-4 font-serif text-section-title text-text-primary">
-            ご出欠のご連絡
+            {config.sections?.rsvp?.title || 'ご出欠のご連絡'}
           </h2>
           <p className="mt-4 text-sm text-text-secondary">
-            お手数ですが、ご出欠のご意向やアレルギーなどございましたら下記フォームにてお知らせください。
+            {config.sections?.rsvp?.description || 'お手数ですが、ご出欠のご意向やアレルギーなどございましたら下記フォームにてお知らせください。'}
           </p>
           <p className="mt-3 text-sm font-semibold text-accent">
-            回答期限：2026年4月5日まで
+            {config.sections?.rsvp?.deadlineLabel || '回答期限：'}{config.event.rsvpDeadline}まで
           </p>
         </motion.div>
 
@@ -169,7 +170,7 @@ export default function RSVP() {
             {/* Name */}
             <div>
               <label htmlFor="name" className="mb-2 block text-sm font-semibold text-text-primary">
-                お名前 <span className="text-accent">*</span>
+                {config.sections?.rsvp?.form?.name?.label || 'お名前'} <span className="text-accent">*</span>
               </label>
               <input
                 type="text"
@@ -181,7 +182,7 @@ export default function RSVP() {
                   ? 'border-red-400 focus:ring-red-200'
                   : 'border-line focus:border-accent/60 focus:ring-accent/15'
                   }`}
-                placeholder="山田 太郎"
+                placeholder={config.sections?.rsvp?.form?.name?.placeholder || '山田 太郎'}
               />
               {errors.name && (
                 <p className="mt-1 text-sm text-red-500">{errors.name}</p>
@@ -191,7 +192,7 @@ export default function RSVP() {
             {/* Email */}
             <div>
               <label htmlFor="email" className="mb-2 block text-sm font-semibold text-text-primary">
-                メールアドレス <span className="text-accent">*</span>
+                {config.sections?.rsvp?.form?.email?.label || 'メールアドレス'} <span className="text-accent">*</span>
               </label>
               <input
                 type="email"
@@ -203,7 +204,7 @@ export default function RSVP() {
                   ? 'border-red-400 focus:ring-red-200'
                   : 'border-line focus:border-accent/60 focus:ring-accent/15'
                   }`}
-                placeholder="example@email.com"
+                placeholder={config.sections?.rsvp?.form?.email?.placeholder || 'example@email.com'}
               />
               {errors.email && (
                 <p className="mt-1 text-sm text-red-500">{errors.email}</p>
@@ -213,7 +214,7 @@ export default function RSVP() {
             {/* Attendance */}
             <div>
               <label className="mb-3 block text-sm font-semibold text-text-primary">
-                ご出欠 <span className="text-accent">*</span>
+                {config.sections?.rsvp?.form?.attendance?.label || 'ご出欠'} <span className="text-accent">*</span>
               </label>
               <div className="flex flex-col gap-3 sm:flex-row">
                 <label className="flex-1">
@@ -226,7 +227,7 @@ export default function RSVP() {
                     className="sr-only peer"
                   />
                   <div className="rounded-2xl border-2 px-6 py-4 text-center text-sm font-semibold text-text-secondary transition-all peer-checked:border-accent peer-checked:bg-accent peer-checked:text-white">
-                    出席
+                    {config.sections?.rsvp?.form?.attendance?.options?.attending || '出席'}
                   </div>
                 </label>
                 <label className="flex-1">
@@ -239,7 +240,7 @@ export default function RSVP() {
                     className="sr-only peer"
                   />
                   <div className="rounded-2xl border-2 px-6 py-4 text-center text-sm font-semibold text-text-secondary transition-all peer-checked:border-accent peer-checked:bg-accent peer-checked:text-white">
-                    欠席
+                    {config.sections?.rsvp?.form?.attendance?.options?.absent || '欠席'}
                   </div>
                 </label>
               </div>
@@ -252,7 +253,7 @@ export default function RSVP() {
             {formData.attendance === '出席' && (
               <div>
                 <label htmlFor="guests" className="mb-2 block text-sm font-semibold text-text-primary">
-                  ご同伴者数（任意）
+                  {config.sections?.rsvp?.form?.guests?.label || 'ご同伴者数（任意）'}
                 </label>
                 <input
                   type="text"
@@ -261,7 +262,7 @@ export default function RSVP() {
                   value={formData.guests}
                   onChange={handleChange}
                   className="w-full rounded-2xl border border-line px-4 py-3 text-sm transition-all focus:outline-none focus:border-accent/60 focus:ring-2 focus:ring-accent/15"
-                  placeholder="例：1名"
+                  placeholder={config.sections?.rsvp?.form?.guests?.placeholder || '例：1名'}
                 />
               </div>
             )}
@@ -270,7 +271,7 @@ export default function RSVP() {
             {formData.attendance === '出席' && (
               <div>
                 <label htmlFor="allergies" className="mb-2 block text-sm font-semibold text-text-primary">
-                  アレルギーの有無（任意）
+                  {config.sections?.rsvp?.form?.allergies?.label || 'アレルギーの有無（任意）'}
                 </label>
                 <input
                   type="text"
@@ -279,7 +280,7 @@ export default function RSVP() {
                   value={formData.allergies}
                   onChange={handleChange}
                   className="w-full rounded-2xl border border-line px-4 py-3 text-sm transition-all focus:outline-none focus:border-accent/60 focus:ring-2 focus:ring-accent/15"
-                  placeholder="例：えび、かに"
+                  placeholder={config.sections?.rsvp?.form?.allergies?.placeholder || '例：えび、かに'}
                 />
               </div>
             )}
@@ -287,7 +288,7 @@ export default function RSVP() {
             {/* Message */}
             <div>
               <label htmlFor="message" className="mb-2 block text-sm font-semibold text-text-primary">
-                メッセージ（任意）
+                {config.sections?.rsvp?.form?.message?.label || 'メッセージ（任意）'}
               </label>
               <textarea
                 id="message"
@@ -296,7 +297,7 @@ export default function RSVP() {
                 onChange={handleChange}
                 rows={4}
                 className="w-full resize-none rounded-2xl border border-line px-4 py-3 text-sm transition-all focus:outline-none focus:border-accent/60 focus:ring-2 focus:ring-accent/15"
-                placeholder="お二人へのメッセージをお願いします"
+                placeholder={config.sections?.rsvp?.form?.message?.placeholder || 'お二人へのメッセージをお願いします'}
               />
             </div>
 
@@ -307,11 +308,11 @@ export default function RSVP() {
               className="btn-primary w-full justify-center disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isSubmitting ? (
-                <>送信中...</>
+                <>{config.sections?.rsvp?.form?.submitButton?.sending || '送信中...'}</>
               ) : (
                 <>
                   <Send className="w-5 h-5" />
-                  送信する
+                  {config.sections?.rsvp?.form?.submitButton?.default || '送信する'}
                 </>
               )}
             </button>

@@ -20,7 +20,7 @@ export default function Intro() {
           className="card-panel max-w-3xl mx-auto text-center p-8 sm:p-12 space-y-8"
         >
           <p className="eyebrow justify-center text-accent">
-            Invitation
+            {config.sections?.intro?.eyebrow || 'Invitation'}
           </p>
           {config.messages.intro.map((text, index) => (
             <p key={index} className="text-body text-text-primary leading-relaxed tracking-wide font-light">
