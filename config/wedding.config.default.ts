@@ -104,6 +104,18 @@ export const weddingConfig = {
                 alt: 'サンプル動画2',
                 transition: 'fade',
             },
+            {
+                type: 'video',
+                src: '/videos/optimized/sample-hero-1-1080p.mp4',
+                alt: 'サンプル動画2',
+                transition: 'fade',
+            },
+            {
+                type: 'image',
+                src: '/images/optimized/sample-story-1.webp',
+                alt: 'サンプル画像1',
+                transition: 'fade',
+            },
         ] as const,
     },
     musicRequests: {

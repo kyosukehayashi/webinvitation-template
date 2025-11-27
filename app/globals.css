@@ -14,13 +14,18 @@
 
   body {
     @apply antialiased bg-base text-text-primary;
-    background-image: radial-gradient(circle at top, rgba(255,255,255,0.45), transparent 45%),
-      radial-gradient(circle at 20% 20%, rgba(183,109,104,0.08), transparent 35%),
+    background-image:
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E"),
+      radial-gradient(circle at top, rgba(255, 255, 255, 0.45), transparent 45%),
+      radial-gradient(circle at 20% 20%, rgba(183, 109, 104, 0.08), transparent 35%),
       linear-gradient(180deg, #fffdf8 0%, #f8f4ef 40%, #f5f0e8 100%);
     min-height: 100vh;
   }
 
-  h1, h2, h3, h4 {
+  h1,
+  h2,
+  h3,
+  h4 {
     @apply font-serif text-text-primary tracking-wide;
   }
 
@@ -49,7 +54,7 @@
   }
 
   .card-panel {
-    @apply rounded-[28px] bg-white/95 shadow-floating border border-white/60 backdrop-blur;
+    @apply rounded-md bg-white/95 shadow-sm border border-white/60 backdrop-blur;
   }
 
   .btn-pill {
@@ -90,4 +95,3 @@
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   }
 }
-

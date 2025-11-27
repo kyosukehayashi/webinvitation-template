@@ -23,6 +23,7 @@ export default function Hero() {
   const [heroAssets, setHeroAssets] = useState<HeroAsset[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [showWelcome, setShowWelcome] = useState(true)
+  const [hasRotated, setHasRotated] = useState(false)
 
   // Refs for both foreground and background videos
   const fgVideoRefs = useRef<(HTMLVideoElement | null)[]>([])
@@ -56,6 +57,7 @@ export default function Hero() {
     let timer: NodeJS.Timeout
 
     const handleNext = () => {
+      setHasRotated(true)
       setActiveIndex((current) => (current + 1) % heroAssets.length)
     }
 
@@ -87,13 +89,15 @@ export default function Hero() {
 
   // Video Playback Synchronization
   useEffect(() => {
-    // Play active videos, pause others
+    const transitionDuration = 1000 // Match exit duration
+
+    // Play active videos, pause others after transition
     heroAssets.forEach((_, index) => {
       const fgVideo = fgVideoRefs.current[index]
       const bgVideo = bgVideoRefs.current[index]
 
       if (index === activeIndex) {
-        // Reset and play active videos
+        // Reset and play active videos immediately
         if (fgVideo) {
           fgVideo.currentTime = 0
           fgVideo.play().catch(() => { })
@@ -103,9 +107,14 @@ export default function Hero() {
           bgVideo.play().catch(() => { })
         }
       } else {
-        // Pause inactive videos
-        if (fgVideo) fgVideo.pause()
-        if (bgVideo) bgVideo.pause()
+        // Schedule pause for inactive videos to allow them to play during fade out
+        // Check if video is playing to avoid unnecessary timeouts for already paused videos
+        if ((fgVideo && !fgVideo.paused) || (bgVideo && !bgVideo.paused)) {
+          setTimeout(() => {
+            if (fgVideo) fgVideo.pause()
+            if (bgVideo) bgVideo.pause()
+          }, transitionDuration)
+        }
       }
     })
   }, [activeIndex, heroAssets])
@@ -128,9 +137,33 @@ export default function Hero() {
     }
   }, [activeIndex, heroAssets])
 
+  // 各トランジションタイプに応じたアニメーション設定を取得
+  const getTransitionVariants = (transition: TransitionType, isActive: boolean, isFirst: boolean) => {
+    // 初回表示のアイテム(isFirst)
+    if (isFirst) {
+      return {
+        // showWelcomeがtrueの間は非表示、falseになったらフェードイン
+        animate: {
+          opacity: showWelcome ? 0 : 1,
+          zIndex: 10,
+          transition: { duration: 1.5, ease: "easeInOut" }
+        }
+      }
+    }
+
+    return {
+      // Dip to Black Transition
+      // Exit: Fade out (1.0s)
+      // Enter: Fade in (1.5s) after delay (1.0s)
+      animate: isActive
+        ? { opacity: 1, zIndex: 10, transition: { duration: 1.5, delay: 1.0, ease: "easeInOut" } }
+        : { opacity: 0, zIndex: 1, transition: { duration: 1.0, ease: "easeInOut" } },
+    }
+  }
+
   return (
     <motion.section
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-black"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
@@ -143,7 +176,7 @@ export default function Hero() {
         className="absolute inset-0 z-[3] bg-gradient-to-br from-surface via-white to-accent/light/30"
         initial={{ opacity: 1 }}
         animate={{ opacity: showWelcome ? 1 : 0 }}
-        transition={{ duration: 1.5, ease: "easeInOut" }}
+        transition={{ duration: 1.0, ease: "easeInOut" }}
         style={{ pointerEvents: showWelcome ? 'auto' : 'none' }}
       >
         <div className="absolute inset-0 opacity-[0.03]">
@@ -156,17 +189,16 @@ export default function Hero() {
       <div className="absolute inset-0 z-0">
         {heroAssets.map((asset, index) => {
           const isActive = index === activeIndex
+          // 初回ロード時の最初の画像かどうか (まだ回転しておらず、indexが0の場合)
+          const isFirst = index === 0 && !hasRotated
+          const variants = getTransitionVariants(asset.transition, isActive, isFirst);
           return (
             <motion.div
               key={`bg-${asset.src}-${index}`}
               aria-hidden="true"
               className="absolute inset-0"
-              initial={{ opacity: 0 }}
-              animate={{
-                opacity: isActive ? 1 : 0,
-                zIndex: isActive ? 1 : 0
-              }}
-              transition={{ duration: 1.5 }}
+              initial={{ opacity: 0, zIndex: index === 0 ? 1 : 0 }}
+              animate={variants.animate}
             >
               {asset.type === 'video' ? (
                 <video
@@ -198,17 +230,16 @@ export default function Hero() {
       <div className="absolute inset-0 z-10">
         {heroAssets.map((asset, index) => {
           const isActive = index === activeIndex
+          // 初回ロード時の最初の画像かどうか (まだ回転しておらず、indexが0の場合)
+          const isFirst = index === 0 && !hasRotated
+          const variants = getTransitionVariants(asset.transition, isActive, isFirst);
           return (
             <motion.div
               key={`${asset.src}-${index}`}
               aria-hidden={!isActive}
               className="absolute inset-0"
-              initial={{ opacity: 0 }}
-              animate={{
-                opacity: isActive ? 1 : 0,
-                zIndex: isActive ? 10 : 0
-              }}
-              transition={{ duration: 1.5 }}
+              initial={{ opacity: 0, zIndex: index === 0 ? 10 : 0 }}
+              animate={variants.animate}
             >
               {asset.type === 'video' ? (
                 <video

@@ -52,7 +52,7 @@ export default function StoryClient() {
               <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-accent rounded-full border-4 border-white shadow-sm hidden md:block z-10" />
 
               <div className="w-full md:w-1/2">
-                <div className="relative w-full aspect-[4/3] rounded-[22px] overflow-hidden shadow-floating border border-white/50 bg-surface group">
+                <div className="relative w-full aspect-[4/3] rounded-md overflow-hidden shadow-sm border border-white/50 bg-surface group">
                   {item.type === 'video' ? (
                     <video
                       autoPlay
