@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { CheckCircle2, HelpCircle, Sparkles } from 'lucide-react'
+import { CheckCircle2, HelpCircle } from 'lucide-react'
 import { useConfig } from '@/hooks/useConfig'
 
 interface QuizOption {
@@ -68,22 +68,30 @@ export default function CoupleQuiz() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-120px' }}
+          viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.8 }}
+          className="text-center mb-14"
+        >
+          <p className="eyebrow justify-center mb-4 text-accent">
+            {config.sections?.coupleQuiz?.pill || 'Couple Discovery Quiz'}
+          </p>
+          <h2 className="font-serif text-section-title text-text-primary">
+            {config.sections?.coupleQuiz?.title || 'お二人をもっと知ろう'}
+          </h2>
+          <p className="text-text-secondary text-sm mt-2">
+            {config.sections?.coupleQuiz?.description || 'クイズに答えて、おふたりの意外な一面に触れてみましょう。披露宴当日のトリビアトークのヒントにもなります。'}
+          </p>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-120px' }}
+          transition={{ duration: 0.8, delay: 0.1 }}
           className="mx-auto max-w-3xl"
         >
           <div className="card-panel p-6 sm:p-10">
             <div className="mb-8 flex flex-col gap-4 text-center">
-              <div className="pill mx-auto">
-                <Sparkles className="h-4 w-4" />
-                {config.sections?.coupleQuiz?.pill || 'Couple Discovery Quiz'}
-              </div>
-              <h2 className="font-serif text-section-title text-text-primary">
-                {config.sections?.coupleQuiz?.title || 'お二人をもっと知ろう'}
-              </h2>
-              <p className="text-sm text-text-secondary">
-                {config.sections?.coupleQuiz?.description || 'クイズに答えて、おふたりの意外な一面に触れてみましょう。披露宴当日のトリビアトークのヒントにもなります。'}
-              </p>
               <p className="text-xs text-accent">
                 {currentIndex + 1} / {quizQuestions.length} {config.sections?.coupleQuiz?.questionCount || '問目'}
               </p>

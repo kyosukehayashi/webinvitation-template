@@ -145,16 +145,15 @@ export default function MusicRequests() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.8 }}
-          className="text-center max-w-2xl mx-auto mb-12"
+          className="text-center mb-14"
         >
-          <div className="pill mx-auto mb-4 justify-center">
-            <Sparkles className="h-4 w-4" />
+          <p className="eyebrow justify-center mb-4 text-accent">
             {config.sections?.musicRequests?.pill || 'プレイリストにあなたの1曲を'}
-          </div>
-          <h2 className="font-serif text-section-title text-text-primary mb-4">
+          </p>
+          <h2 className="font-serif text-section-title text-text-primary">
             {config.musicRequests?.title || 'Music Request Lounge'}
           </h2>
-          <p className="text-text-secondary leading-relaxed text-sm sm:text-base">
+          <p className="text-text-secondary text-sm mt-2">
             {config.musicRequests?.description || 'YouTube Musicと連携したリクエストコーナーです。おふたりとゲストの皆さまで、当日のサウンドトラックを一緒に作り上げましょう。'}
           </p>
         </motion.div>
